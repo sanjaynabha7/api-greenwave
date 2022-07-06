@@ -58,6 +58,7 @@ const verifyToken = (request, response, next) => {
 app.use("/api", routs)
 
 app.get("/api/testing", (req, res) => {
+  alert("ServPassed the teing...")
   res.send("Passed the test!!!")
 });
 
