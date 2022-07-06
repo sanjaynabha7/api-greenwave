@@ -57,7 +57,7 @@ const verifyToken = (request, response, next) => {
 
 
 
-app.get("/api/product/get-products", verifyToken, async (request, response) => {
+app.get("/api/product/get-products",  async (request, response) => {
   let result = await productsR(request, response)
   response.send({ result, message: "Working" })
 });
