@@ -59,7 +59,7 @@ const verifyToken = (request, response, next) => {
 }
 
 // // Required all API
-app.use("/api", verifyToken, routs)
+app.use("/api", routs)
 
 app.get("/api/testing", async (req, res) => {
   let data = await Products.find()
