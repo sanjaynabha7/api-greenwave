@@ -77,7 +77,7 @@ app.post("/api/auth/login", verifyToken, async (request, response) => {
 });
 
 
-app.post('/register', async (request, response, next) => {
+app.post('/api/auth/register', async (request, response, next) => {
   try {
       let result = await register(request, response)
       if (result === true) {
