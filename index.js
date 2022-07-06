@@ -77,10 +77,23 @@ app.post("/api/auth/login", verifyToken, async (request, response) => {
 });
 
 
-// app.get("/api/testing", async (req, res) => {
-//   let result = await get_products(req, res)
-//   res.send({ result, message: "Working" })
-// });
+app.post('/register', async (request, response, next) => {
+  try {
+      let result = await register(request, response)
+      if (result === true) {
+          response.send({ result, message: "User is already created." })
+      } else {
+          response.status(201).send({ result, message: "User is created." })
+      }
+  } catch (error) {
+      response.send(error)
+      next()
+  }
+});
+
+
+
+app.get("/api/testing", async (req, res) => {res.send( "Working")});
 
 
 const PORT = process.env.PORT || 8800
