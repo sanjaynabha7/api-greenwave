@@ -55,13 +55,16 @@ const verifyToken = (request, response, next) => {
 }
 
 // // Required all API
-app.use("/api", verifyToken, routs)
+app.use("/api", routs)
 
-app.get("/api/testing", (req, res) => res.send("Passed the test!!!"));
+app.get("/api/testing", (req, res) => {
+  res.send("Passed the test!!!")
+});
 
 
 const PORT = process.env.PORT || 8800
 
 app.listen(PORT, () => {
+  alert("Server is running...")
   console.log("Server is running..." + PORT)
 })
