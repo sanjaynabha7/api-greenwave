@@ -2,12 +2,10 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require("mongoose");
 var jwt = require('jsonwebtoken');
-const routs = require('./api/router')
-
-
-const Products = require('./models/products')
 
 const { add_products, get_products } = require('./api/helpers/products')
+const { login, register } = require('./api/helpers/auth')
+
 
 const app = express()
 app.use(cors())
@@ -52,20 +50,37 @@ const verifyToken = (request, response, next) => {
       response.send("Not authentication")
     }
 
-
-
   } else {
     next()
   }
 }
 
-// // Required all API
-app.use("/api", routs)
 
-app.get("/api/testing", async (req, res) => {
-  let result = await get_products(req, res)
-  res.send({ result, message: "Working" })
+
+app.get("/api/product/get-products", verifyToken, async (request, response) => {
+  let result = await get_products(request, response)
+  response.send({ result, message: "Working" })
 });
+
+app.get("/api/auth/login", verifyToken, async (request, response) => {
+  try {
+    let result = await login(request, response)
+    if (result === true) {
+      response.send({ result, message: "credentials is not working." })
+    } else {
+      response.status(200).send({ result, message: "Login successful" })
+    }
+  } catch (error) {
+    response.send(error)
+    next()
+  }
+});
+
+
+// app.get("/api/testing", async (req, res) => {
+//   let result = await get_products(req, res)
+//   res.send({ result, message: "Working" })
+// });
 
 
 const PORT = process.env.PORT || 8800
