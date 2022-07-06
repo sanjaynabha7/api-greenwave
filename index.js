@@ -63,8 +63,8 @@ const verifyToken = (request, response, next) => {
 app.use("/api", routs)
 
 app.get("/api/testing", async (req, res) => {
-  let data = await get_products(request, response)
-  res.send({ data, messae: "ssssssssssssss" })
+  let result = await get_products(request, response)
+  response.send({ result, message: "Working" })
 });
 
 
