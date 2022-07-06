@@ -58,7 +58,6 @@ const verifyToken = (request, response, next) => {
 app.use("/api", routs)
 
 app.get("/api/testing", (req, res) => {
-  alert("ServPassed the teing...")
   res.send("Passed the test!!!")
 });
 
@@ -66,6 +65,5 @@ app.get("/api/testing", (req, res) => {
 const PORT = process.env.PORT || 8800
 
 app.listen(PORT, () => {
-  alert("Server is running...")
   console.log("Server is running..." + PORT)
 })
