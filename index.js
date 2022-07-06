@@ -3,7 +3,7 @@ const cors = require('cors')
 const mongoose = require("mongoose");
 var jwt = require('jsonwebtoken');
 
-const { add_products, get_products } = require('./api/helpers/products')
+const { productsR } = require('./api/router/produtcs')
 const { login, register } = require('./api/helpers/auth')
 
 
@@ -58,9 +58,11 @@ const verifyToken = (request, response, next) => {
 
 
 app.get("/api/product/get-products", verifyToken, async (request, response) => {
-  let result = await get_products(request, response)
+  let result = await productsR(request, response)
   response.send({ result, message: "Working" })
 });
+
+
 
 app.post("/api/auth/login", verifyToken, async (request, response) => {
   try {
@@ -79,21 +81,21 @@ app.post("/api/auth/login", verifyToken, async (request, response) => {
 
 app.post('/api/auth/register', async (request, response, next) => {
   try {
-      let result = await register(request, response)
-      if (result === true) {
-          response.send({ result, message: "User is already created." })
-      } else {
-          response.status(201).send({ result, message: "User is created." })
-      }
+    let result = await register(request, response)
+    if (result === true) {
+      response.send({ result, message: "User is already created." })
+    } else {
+      response.status(201).send({ result, message: "User is created." })
+    }
   } catch (error) {
-      response.send(error)
-      next()
+    response.send(error)
+    next()
   }
 });
 
 
 
-app.get("/api/testing", async (req, res) => {res.send( "Working")});
+app.get("/api/testing", async (req, res) => { res.send("Working") });
 
 
 const PORT = process.env.PORT || 8800
