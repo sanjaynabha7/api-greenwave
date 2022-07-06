@@ -62,7 +62,7 @@ app.get("/api/product/get-products", verifyToken, async (request, response) => {
   response.send({ result, message: "Working" })
 });
 
-app.get("/api/auth/login", verifyToken, async (request, response) => {
+app.post("/api/auth/login", verifyToken, async (request, response) => {
   try {
     let result = await login(request, response)
     if (result === true) {
