@@ -4,6 +4,10 @@ const mongoose = require("mongoose");
 var jwt = require('jsonwebtoken');
 const routs = require('./api/router')
 
+
+const Products = require('./models/products')
+
+
 const app = express()
 app.use(cors())
 app.use(express.json())
@@ -27,7 +31,7 @@ const verifyToken = (request, response, next) => {
       if (parts.length === 2) {
         var scheme = parts[0];
         var credentials = parts[1];
-     
+
         if (/^Bearer$/i.test(scheme)) {
           if (credentials) {
             var privateKey = "nabha";
@@ -40,14 +44,14 @@ const verifyToken = (request, response, next) => {
             response.send("Not authentication")
           }
         }
-     } else {
-      response.send("Please check your token bearer")
-    }
+      } else {
+        response.send("Please check your token bearer")
+      }
     } else {
       response.send("Not authentication")
     }
 
- 
+
 
   } else {
     next()
@@ -55,10 +59,11 @@ const verifyToken = (request, response, next) => {
 }
 
 // // Required all API
-app.use("/api", routs)
+app.use("/api", verifyToken, routs)
 
-app.get("/api/testing", (req, res) => {
-  res.send("Passed the test!!!")
+app.get("/api/testing", async (req, res) => {
+  let data = await Products.find()
+  res.send({ data, messae: "ssssssssssssss" })
 });
 
 
