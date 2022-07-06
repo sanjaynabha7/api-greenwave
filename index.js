@@ -7,6 +7,7 @@ const routs = require('./api/router')
 
 const Products = require('./models/products')
 
+const { add_products, get_products } = require('./api/helpers/products')
 
 const app = express()
 app.use(cors())
@@ -62,7 +63,7 @@ const verifyToken = (request, response, next) => {
 app.use("/api", routs)
 
 app.get("/api/testing", async (req, res) => {
-  let data = await Products.find()
+  let data = await get_products(request, response)
   res.send({ data, messae: "ssssssssssssss" })
 });
 
