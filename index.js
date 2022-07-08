@@ -2,10 +2,9 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require("mongoose");
 var jwt = require('jsonwebtoken');
-
-const { productsR } = require('./api/router/produtcs')
+const { productsR, singleProduct } = require('./api/router/products')
 const { login, register } = require('./api/helpers/auth')
-
+const stripe = require('stripe')('sk_test_51LJBNeHmLvXJkyzyjdFqGY43RvTk0WUYhCKQNBfBZvSp4czPbKmdviN1cQXFFaeODkvloonsqHg6ddCEGkoC404900r4i438pd');
 
 const app = express()
 app.use(cors())
@@ -57,11 +56,15 @@ const verifyToken = (request, response, next) => {
 
 
 
-app.get("/api/product/get-products",  async (request, response) => {
+app.get("/api/product/get-products", verifyToken, async (request, response) => {
   let result = await productsR(request, response)
   response.send({ result, message: "Working" })
 });
 
+app.get("/api/product/get-products/:id", async (request, response) => {
+  let result = await singleProduct(request, response)
+  response.send({ result, message: "Working" })
+});
 
 
 app.post("/api/auth/login", verifyToken, async (request, response) => {
@@ -93,6 +96,27 @@ app.post('/api/auth/register', async (request, response, next) => {
   }
 });
 
+
+app.post('/api/payment', async (request, response, next) => {
+  const { token, products } = request.body
+  try {
+    const customer = await stripe.customers.create({
+      email: token.email,
+      source: token.id,
+    });
+    const charge = await stripe.charges.create({
+      amount: products[0].price * 100,
+      currency: "usd",
+      customer: customer.id,
+      description: `Product Name: ${products[0].name} `,
+      receipt_email: token.email,
+    })
+    response.status(200).send({ status: 200, charge, message: "Payment is done" })
+    next()
+  } catch (error) {
+    response.send(error)
+  }
+});
 
 
 app.get("/api/testing", async (req, res) => { res.send("Working") });
